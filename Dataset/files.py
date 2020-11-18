@@ -15,10 +15,10 @@ class Files(object):
         folder = os.path.normpath(folder)
         self.path = folder
         self.ext = ext
-        if flag is 'this':
+        if flag == 'this':
             [self.filesNoExt, self.filesWithPath, self.count] = \
                 Files.__getfiles(folder, ext)
-        elif flag is 'all':
+        elif flag == 'all':
             [self.filesNoExt, self.filesWithPath, self.count] = \
                 Files.__getfilesAll(folder, ext)
         self.filesPath = [folder] * self.count
