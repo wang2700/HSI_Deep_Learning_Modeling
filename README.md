@@ -1,1 +1,1 @@
-# HSI_Deep_Learning_Modeling
+# HSI Deep Learning Modeling
