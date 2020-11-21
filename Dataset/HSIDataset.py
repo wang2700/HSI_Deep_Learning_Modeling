@@ -3,15 +3,25 @@ import torch.nn.functional as F
 from torch.utils.data import Dataset
 from torchvision import transforms, utils
 import numpy as np
-from files import Files
-from utils import caliColor
+from .files import Files
+from .utils import caliColor
 
 class HSIDataset(Dataset):
-    def __init__(self, root_dir, transform=None, max_length=250):
+    def __init__(self, root_dir, max_length, transform=None, train=True):
         self.root_dir = root_dir
         self.transform = transform
         mfiles = Files(self.root_dir, ['*heatmap.npy'])
-        self.rawNameList = mfiles.filesNoExt
+        trainFiles = []
+        testFiles = []
+        for i, filename in enumerate(mfiles.filesNoExt):
+            if (i % 4 == 0):
+                testFiles.append(filename)
+            else:
+                trainFiles.append(filename)
+        # print(trainFiles)
+        # print(testFiles)
+        self.rawNameList = trainFiles if train else testFiles
+        # self.rawNameList = mfiles.filesNoExt
         self.rawNameList = [n[:-8] for n in self.rawNameList]
         self.max_length = max_length
 
@@ -27,8 +37,9 @@ class HSIDataset(Dataset):
         image = caliColor(image, whiteRef)
 
 
-        image = torch.tensor(image)
+        image = torch.tensor(image, dtype=torch.float32)
         image = image.permute((2, 0, 1))
+        image = F.pad(image, (0, self.max_length-image.shape[2],0,3))
         if self.transform:
             image = self.transform(image)
         return image
@@ -41,11 +52,11 @@ if __name__ == "__main__":
     root_dir = r'/media/jerrynas/Research/LeafSpec/SoyBean Device Data/Sumitomo 2020/Raw Data'
     transform_list = torch.nn.Sequential(
         transforms.RandomHorizontalFlip(p=0.5),
-        transforms.RandomVerticalFlip(p=0.5)#,
-        # transforms.RandomRotation((-180, 180), expand=True)
+        transforms.RandomVerticalFlip(p=0.5),
+        transforms.RandomRotation((-20, 20), expand=False)
     )
     
-    dataset = HSIDataset(root_dir=root_dir, transform=transform_list)
+    dataset = HSIDataset(root_dir=root_dir, transform=transform_list, max_length=204)
 
     for i in range(len(dataset)):
         sample = dataset[i]

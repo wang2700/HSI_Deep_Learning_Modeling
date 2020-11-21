@@ -1,0 +1,22 @@
+TRAIN: 
+  BATCH_SIZE: 6
+  EPOCH: 2000
+
+TEST:
+  BATCH_SIZE: 1
+
+OPTIMIZER:
+  lr: 0.0001
+
+MODEL:
+  AE:
+    N_LATENT: 150
+    MODEL_PATH: '/media/jerrynas/Research/LeafSpec/HSI Deep Learning Model/model.pth'
+
+DATASET:
+  N_WAVELENGTH: 360
+  DATA_DIR: '/media/jerrynas/Research/LeafSpec/SoyBean Device Data/Sumitomo 2020/Raw Data'
+  MAX_LENGTH: 203
+  ROTATE_IMAGE: True
+  FLIP_HORIZONTAL: True
+  FLIP_VERTICAL: True

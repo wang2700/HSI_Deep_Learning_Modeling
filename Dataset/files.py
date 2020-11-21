@@ -1,7 +1,7 @@
 ﻿import glob
 import os
 import numpy as np
-from smalltools import sortListStringHuman
+from .smalltools import sortListStringHuman
 from fnmatch import fnmatch
 
 class Files(object):
