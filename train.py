@@ -44,7 +44,8 @@ def train(cfg):
     train_counter = []
 
     for epoch in range(cfg['TRAIN']['EPOCH']):
-        for batch_idx, hsi_img in enumerate(train_loader):
+        for batch_idx, data in enumerate(train_loader):
+            hsi_img = data[0]
             optimizer.zero_grad()
             hsi_img = hsi_img.cuda()
             _, output = AE(hsi_img)

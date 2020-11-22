@@ -8,6 +8,9 @@ import pprint
 from Dataset.HSIDataset import HSIDataset
 from model.HSI_AE import HSI_AE
 import matplotlib.pyplot as plt
+import utils.HSI_Analysis as HSI_Analysis
+import numpy as np
+import cv2
 
 def test(cfg):
     batch_size = cfg['TEST']['BATCH_SIZE']
@@ -29,20 +32,49 @@ def test(cfg):
     loss_fn = nn.MSELoss(reduction='sum')
     test_loss = 0
     with torch.no_grad():
-        for i, image in enumerate(test_loader):
+        for i, data in enumerate(test_loader):
+            image = data[0]
             image = image.cuda()
             _, output = AE(image)
             test_loss += loss_fn(output, image).item()
-            evaluate(output, image)
+            for i in range(output.shape[0]):
+                evaluate(cfg, output[i], image[i], data[1][i])
         
         test_loss /= len(test_loader.dataset)
         print(f'Test result on the model: Avg Loss is {test_loss}')
 
-def evaluate(output, original):
-    output = output.numpy()
-    original = original.numpy()
+def evaluate(cfg, output, original, pst):
+    output = output.permute((1,2,0)).cpu().numpy()
+    original = original.permute((1,2,0)).cpu().numpy()
+
+    out_ndvi, out_specAlongLeaf, out_specWholeLeaf = analysis(cfg, output)
+    ori_ndvi, ori_specAlongLeaf, ori_specWholeLeaf = analysis(cfg, original)
     
-     
+    plt.figure()
+    fig, ax = plt.subplots(1,2)
+    fig.set_size_inches(12, 8)
+    ax[0].imshow(ori_ndvi)
+    ax[0].set_title('Original NDVI')
+    ax[0].axis('off')
+    ax[1].imshow(out_ndvi)
+    ax[1].set_title('Output NDVI')
+    ax[1].axis('off')
+    plt.show()
+    # cv2.imshow('Origin NDVI', ori_ndvi)
+    # cv2.waitKey(0)
+
+    
+def analysis(cfg, image):
+    specsAlongLeaf = np.zeros(image.shape[1:3])
+    ndviImg = HSI_Analysis.getNDVIHeatmap(image, cfg['HSI']['WV2PST'])
+    imgseg = HSI_Analysis.segmentation(image, ndviImg, cfg['HSI']['NDVI_THRESH'])
+    imgseg = HSI_Analysis.removeRightRegion(imgseg)
+    ndviImg = HSI_Analysis.getNDVIHeatmap(imgseg, cfg['HSI']['WV2PST'])
+    specsAlongLeaf = HSI_Analysis.getMeanSpecAlongLeaf(imgseg)
+    specsMean = HSI_Analysis.getMeanSpecWholeLeaf(imgseg)
+    return ndviImg, specsAlongLeaf, specsMean
+
+
 
 if __name__ == "__main__":
     cfg = yaml.load(open('config/config.yaml'), Loader=yaml.FullLoader)

@@ -4,7 +4,7 @@ from torch.utils.data import Dataset
 from torchvision import transforms, utils
 import numpy as np
 from .files import Files
-from .utils import caliColor
+from utils.HSI_Analysis import caliColor
 
 class HSIDataset(Dataset):
     def __init__(self, root_dir, max_length, transform=None, train=True):
@@ -34,6 +34,7 @@ class HSIDataset(Dataset):
         
         image = np.load(self.root_dir + r'/' + self.rawNameList[idx] + '.npy')
         whiteRef = np.load(self.root_dir + r'/' + self.rawNameList[idx] + '_whRef.npy')
+        pst = np.load(self.root_dir + r'/' + self.rawNameList[idx] + '_imgPst.npy')
         image = caliColor(image, whiteRef)
 
 
@@ -42,7 +43,7 @@ class HSIDataset(Dataset):
         image = F.pad(image, (0, self.max_length-image.shape[2],0,3))
         if self.transform:
             image = self.transform(image)
-        return image
+        return (image, pst)
     
     
 
