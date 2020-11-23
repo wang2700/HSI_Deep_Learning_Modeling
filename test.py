@@ -47,10 +47,9 @@ def evaluate(cfg, output, original, pst):
     output = output.permute((1,2,0)).cpu().numpy()
     original = original.permute((1,2,0)).cpu().numpy()
 
-    out_ndvi, out_specAlongLeaf, out_specWholeLeaf = analysis(cfg, output)
-    ori_ndvi, ori_specAlongLeaf, ori_specWholeLeaf = analysis(cfg, original)
+    out_ndvi, out_specAlongLeaf, out_specWholeLeaf, out_wv = analysis(cfg, output)
+    ori_ndvi, ori_specAlongLeaf, ori_specWholeLeaf, ori_wv = analysis(cfg, original)
     
-    plt.figure()
     fig, ax = plt.subplots(1,2)
     fig.set_size_inches(12, 8)
     ax[0].imshow(ori_ndvi)
@@ -60,8 +59,24 @@ def evaluate(cfg, output, original, pst):
     ax[1].set_title('Output NDVI')
     ax[1].axis('off')
     plt.show()
-    # cv2.imshow('Origin NDVI', ori_ndvi)
-    # cv2.waitKey(0)
+
+    fig, ax = plt.subplots(1,2)
+    fig.set_size_inches(12, 8)
+    ax[0].plot(ori_wv, ori_specWholeLeaf)
+    ax[0].set_title('Original Mean Spectrum')
+    ax[1].plot(out_wv, out_specWholeLeaf)
+    ax[1].set_title('Output Mean Spectrum')
+    plt.show()
+
+    # fig, ax = plt.subplots(1,2)
+    # fig.set_size_inches(12, 8)
+    # ax[0].imshow(ori_ndvi)
+    # ax[0].set_title('Original NDVI')
+    # ax[0].axis('off')
+    # ax[1].imshow(out_ndvi)
+    # ax[1].set_title('Output NDVI')
+    # ax[1].axis('off')
+    # plt.show()
 
     
 def analysis(cfg, image):
@@ -71,8 +86,9 @@ def analysis(cfg, image):
     imgseg = HSI_Analysis.removeRightRegion(imgseg)
     ndviImg = HSI_Analysis.getNDVIHeatmap(imgseg, cfg['HSI']['WV2PST'])
     specsAlongLeaf = HSI_Analysis.getMeanSpecAlongLeaf(imgseg)
-    specsMean = HSI_Analysis.getMeanSpecWholeLeaf(imgseg)
-    return ndviImg, specsAlongLeaf, specsMean
+    specsMean = HSI_Analysis.getMeanSpecWholeLeaf(specsAlongLeaf)
+    wv = HSI_Analysis.getWvs(range=np.arange(image.shape[2]), paraPst2Wv=cfg['HSI']['PST2WV'])
+    return ndviImg, specsAlongLeaf, specsMean, wv
 
 
 

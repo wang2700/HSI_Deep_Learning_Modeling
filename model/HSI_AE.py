@@ -19,9 +19,11 @@ class HSI_AE(nn.Module):
     def forward(self, x):
         x = F.relu(self.en1(x))
         x = F.relu(self.en2(x))
+        x = F.relu(self.en3(x))
 
         features = x
 
+        x = F.relu(self.de3(x))
         x = F.relu(self.de2(x))
         x = F.relu(self.de1(x))
 

@@ -36,8 +36,6 @@ class HSIDataset(Dataset):
         whiteRef = np.load(self.root_dir + r'/' + self.rawNameList[idx] + '_whRef.npy')
         pst = np.load(self.root_dir + r'/' + self.rawNameList[idx] + '_imgPst.npy')
         image = caliColor(image, whiteRef)
-
-
         image = torch.tensor(image, dtype=torch.float32)
         image = image.permute((2, 0, 1))
         image = F.pad(image, (0, self.max_length-image.shape[2],0,3))

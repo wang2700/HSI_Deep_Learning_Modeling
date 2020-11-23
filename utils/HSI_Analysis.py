@@ -52,4 +52,11 @@ def getMeanSpecWholeLeaf(specs):
     return np.nanmean(specs, axis = 0)
 
 def getPstFromWv(wv, paraWv2Pst):
-        return np.uint16(wv*paraWv2Pst[0] + paraWv2Pst[1])
+    return np.uint16(wv*paraWv2Pst[0] + paraWv2Pst[1])
+
+def getWvFromPst(pst, paraPst2Wv):
+    return np.uint16(pst*paraPst2Wv[0] + paraPst2Wv[1])
+
+def getWvs(range, paraPst2Wv):
+    index = np.float32(range)
+    return getWvFromPst(index, paraPst2Wv)
