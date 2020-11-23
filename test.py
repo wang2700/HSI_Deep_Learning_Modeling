@@ -11,17 +11,19 @@ import matplotlib.pyplot as plt
 import utils.HSI_Analysis as HSI_Analysis
 import numpy as np
 import cv2
+import sys
 
-def test(cfg):
+def test(cfg, model_name):
     batch_size = cfg['TEST']['BATCH_SIZE']
 
     AE = HSI_AE(n_latent=cfg['MODEL']['AE']['N_LATENT'], n_wavelength=cfg['DATASET']['N_WAVELENGTH'])
-    AE.load_state_dict(torch.load(cfg['MODEL']['AE']['MODEL_PATH']))
+    AE.load_state_dict(torch.load(cfg['MODEL']['AE']['MODEL_PATH'] + '/' + model_name))
     AE = AE.cuda()
     AE.eval()
 
     dataset = HSIDataset(root_dir=cfg['DATASET']['DATA_DIR'],
                         max_length=cfg['DATASET']['MAX_LENGTH'],
+                        max_width=cfg['DATASET']['MAX_WIDTH'],
                         transform=None,
                         train=False)
     
@@ -95,4 +97,5 @@ def analysis(cfg, image):
 if __name__ == "__main__":
     cfg = yaml.load(open('config/config.yaml'), Loader=yaml.FullLoader)
     pprint.pprint(cfg, indent=4)
-    test(cfg)
+    args = sys.argv
+    test(cfg, args[1])

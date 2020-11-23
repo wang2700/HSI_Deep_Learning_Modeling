@@ -7,9 +7,10 @@ from .files import Files
 from utils.HSI_Analysis import caliColor
 
 class HSIDataset(Dataset):
-    def __init__(self, root_dir, max_length, transform=None, train=True):
+    def __init__(self, root_dir, max_length, max_width, transform=None, train=True):
         self.root_dir = root_dir
         self.transform = transform
+        self.max_width = max_width
         mfiles = Files(self.root_dir, ['*heatmap.npy'])
         trainFiles = []
         testFiles = []
@@ -38,7 +39,7 @@ class HSIDataset(Dataset):
         image = caliColor(image, whiteRef)
         image = torch.tensor(image, dtype=torch.float32)
         image = image.permute((2, 0, 1))
-        image = F.pad(image, (0, self.max_length-image.shape[2],0,3))
+        image = F.pad(image, (0, self.max_length-image.shape[2],0,self.max_width-image.shape[1]))
         if self.transform:
             image = self.transform(image)
         return (image, pst)

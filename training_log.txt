@@ -1,0 +1,10 @@
+11-22-2020 23:59:54:
+    Epoch: 95/113
+    Loss: 1631383
+    Model Filename: model2020-11-22-23-59-54.pth
+
+11-23-2020 00:58:38:
+    Epoch: 999/999
+    Loss: 2358256
+    Model Filename: model2020-11-23-00-58-38.pth
+

@@ -7,12 +7,20 @@ import yaml
 import pprint
 from Dataset.HSIDataset import HSIDataset
 from model.HSI_AE import HSI_AE
+import datetime
+import sys
 
 
+def train(cfg, pre_train_model):
 
-def train(cfg):
-    
+    time = datetime.datetime.now()
+    time = time.strftime("%Y-%m-%d-%H-%M-%S")
+    model_path = cfg['MODEL']['AE']['MODEL_PATH'] + '/' + 'model' + time + '.pth'
+
     batch_size = cfg['TRAIN']['BATCH_SIZE']
+
+    best_loss = -1
+    best_loss_epoch = -1
     
     transform_list = []
     if cfg['DATASET']['FLIP_HORIZONTAL']:
@@ -28,10 +36,21 @@ def train(cfg):
         
     AE = HSI_AE(n_latent=cfg['MODEL']['AE']['N_LATENT'], n_wavelength=cfg['DATASET']['N_WAVELENGTH']).cuda()
     
+    if pre_train_model != None:
+        print(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") + 'Load From exisiting model: ' + pre_train_model)
+        AE.load_state_dict(torch.load(cfg['MODEL']['AE']['MODEL_PATH'] + '/' + pre_train_model))
+    
     dataset = HSIDataset(root_dir=cfg['DATASET']['DATA_DIR'],
                         max_length=cfg['DATASET']['MAX_LENGTH'],
+                        max_width=cfg['DATASET']['MAX_WIDTH'],
                         transform=transform_list,
                         train=True)
+
+    test_dataset = HSIDataset(root_dir=cfg['DATASET']['DATA_DIR'],
+                        max_length=cfg['DATASET']['MAX_LENGTH'],
+                        max_width=cfg['DATASET']['MAX_WIDTH'],
+                        transform=None,
+                        train=False)
     
     train_loader = torch.utils.data.DataLoader(dataset, 
                                                 batch_size=batch_size,
@@ -54,11 +73,45 @@ def train(cfg):
             optimizer.step()
 
             train_losses.append(loss.item()/batch_size) # item() is to get the value of the tensor directly
-            print(f'Epoch {epoch}: [{batch_idx*len(hsi_img)}/{len(train_loader.dataset)}] Loss: {loss.item()/batch_size}')
+            print(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") + f' Epoch {epoch}: [{batch_idx*len(hsi_img)}/{len(train_loader.dataset)}] Loss: {loss.item()/batch_size}')
+        val_loss = validation(epoch, cfg, AE, test_dataset)
+        if best_loss == -1 or best_loss > val_loss:
+            print(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") + f' Epoch {epoch}: Better loss -- Save Model')
+            best_loss = val_loss
+            best_loss_epoch = epoch
+            torch.save(AE.state_dict(), model_path)
+    print(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") + f' Best Loss: {best_loss} @ Epoch {best_loss_epoch}')
+    print(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") + ' Best Model Saved at: ' + model_path)
+    
 
-    torch.save(AE.state_dict(), cfg['MODEL']['AE']['MODEL_PATH'])
+    
+
+def validation(epoch, cfg, model, dataset):
+    batch_size = cfg['TEST']['BATCH_SIZE']
+
+    model.eval()
+    
+    test_loader = torch.utils.data.DataLoader(dataset, 
+                                                batch_size=batch_size,
+                                                shuffle=False)
+
+    loss_fn = nn.MSELoss(reduction='sum')
+    test_loss = 0
+    with torch.no_grad():
+        for i, data in enumerate(test_loader):
+            image = data[0]
+            image = image.cuda()
+            _, output = model(image)
+            test_loss += loss_fn(output, image).item()
+        
+        test_loss /= len(test_loader.dataset)
+        print(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") + f' Epoch {epoch}: Test result on the model: Avg Loss is {test_loss}')
+    return test_loss
+    
+
 
 if __name__ == "__main__":
     cfg = yaml.load(open('config/config.yaml'), Loader=yaml.FullLoader)
     pprint.pprint(cfg, indent=4)
-    train(cfg)
+    args = sys.argv
+    train(cfg, args[1] if len(args)>1 else None)
