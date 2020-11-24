@@ -15,7 +15,7 @@ def train(cfg, pre_train_model):
 
     time = datetime.datetime.now()
     time = time.strftime("%Y-%m-%d-%H-%M-%S")
-    model_path = cfg['MODEL']['AE']['MODEL_PATH'] + '/' + 'model' + time + '.pth'
+    model_path = cfg['MODEL']['AE']['MODEL_PATH'] + '/' + 'modelAE' + time + '.pth'
 
     batch_size = cfg['TRAIN']['BATCH_SIZE']
 

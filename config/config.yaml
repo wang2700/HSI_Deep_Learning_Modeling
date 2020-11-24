@@ -1,6 +1,10 @@
 TRAIN: 
-  BATCH_SIZE: 4
-  EPOCH: 5000
+  AE:
+    BATCH_SIZE: 4
+    EPOCH: 5000
+  TREATMENT_CLASS:
+    BATCH_SIZE: 4
+    EPOCH: 100
 
 TEST:
   BATCH_SIZE: 6
@@ -12,6 +16,9 @@ MODEL:
   AE:
     N_LATENT: 150
     MODEL_PATH: '/media/jerrynas/Research/LeafSpec/HSI Deep Learning Model'
+  TREATMENT_CLASS:
+    N_CLASSES: 1
+    N_STAGES: 3
 
 DATASET:
   N_WAVELENGTH: 360
