@@ -5,9 +5,11 @@ from torchvision import transforms, utils
 import numpy as np
 from .files import Files
 from utils.HSI_Analysis import caliColor
+import csv
 
 class HSIDataset(Dataset):
-    def __init__(self, root_dir, max_length, max_width, transform=None, train=True):
+    def __init__(self, cfg, root_dir, max_length, max_width, transform=None, train=True):
+        self.cfg = cfg
         self.root_dir = root_dir
         self.transform = transform
         self.max_width = max_width
@@ -32,7 +34,9 @@ class HSIDataset(Dataset):
     def __getitem__(self, idx):
         if torch.is_tensor(idx):
             idx = idx.tolist()
-        
+        plot_name = self.rawNameList[idx][14:18]
+        P_gt = self.cfg['DATASET']['CLASSES'][plot_name]
+
         image = np.load(self.root_dir + r'/' + self.rawNameList[idx] + '.npy')
         whiteRef = np.load(self.root_dir + r'/' + self.rawNameList[idx] + '_whRef.npy')
         pst = np.load(self.root_dir + r'/' + self.rawNameList[idx] + '_imgPst.npy')
@@ -42,7 +46,7 @@ class HSIDataset(Dataset):
         image = F.pad(image, (0, self.max_length-image.shape[2],0,self.max_width-image.shape[1]))
         if self.transform:
             image = self.transform(image)
-        return (image, pst)
+        return (image, pst, P_gt)
     
     
 

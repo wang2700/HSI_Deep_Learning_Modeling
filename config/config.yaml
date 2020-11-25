@@ -28,6 +28,14 @@ DATASET:
   ROTATE_IMAGE: True
   FLIP_HORIZONTAL: True
   FLIP_VERTICAL: True
+  CLASSES: {
+    '6025': 1,
+    '6026': 0,
+    '6027': 0,
+    '6028': 1,
+    '6029': 1,
+    '6030': 0
+  }
 
 HSI:
   NDVI_THRESH: 0.45
