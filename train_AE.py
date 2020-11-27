@@ -35,7 +35,7 @@ def train(cfg, pre_train_model):
     transform_list = transforms.Compose(transform_list)
         
     AE = HSI_AE(n_latent=cfg['MODEL']['AE']['N_LATENT'], n_wavelength=cfg['DATASET']['N_WAVELENGTH']).cuda()
-    
+
     if pre_train_model != None:
         print(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") + 'Load From exisiting model: ' + pre_train_model)
         AE.load_state_dict(torch.load(cfg['MODEL']['AE']['MODEL_PATH'] + '/' + pre_train_model))
@@ -62,7 +62,8 @@ def train(cfg, pre_train_model):
     train_losses = []
     train_counter = []
 
-    for epoch in range(cfg['TRAIN']['EPOCH']):
+    for epoch in range(cfg['TRAIN']['AE']['EPOCH']):
+        AE.train()
         for batch_idx, data in enumerate(train_loader):
             hsi_img = data[0]
             optimizer.zero_grad()

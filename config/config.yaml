@@ -16,6 +16,7 @@ MODEL:
   AE:
     N_LATENT: 150
     MODEL_PATH: '/media/jerrynas/Research/LeafSpec/HSI Deep Learning Model'
+    OUTPUT_SIZE: [150, 124, 109]
   TREATMENT_CLASS:
     N_CLASSES: 1
     N_STAGES: 3
