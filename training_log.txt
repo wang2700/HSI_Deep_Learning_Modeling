@@ -8,3 +8,16 @@
     Loss: 2358256
     Model Filename: model2020-11-23-00-58-38.pth
 
+11-23-2020 09:04:48:
+    Epoch: 2962/3000
+    Loss: 2499152
+    Model Filename: model2020-11-23-09-04-08.pth
+    Max Length: 211
+    Max Width: 241
+
+11-24-2020 13:05:22:
+    Epoch: 4968/5000
+    Loss: 3073602
+    Model Filename: model2020-11-24-13-05-22.pth
+    Max Length: 211
+    Max Width: 241

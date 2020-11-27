@@ -5,6 +5,14 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "Python: Test AE",
+            "type": "python",
+            "request": "launch",
+            "program": "/home/jerry/Documents/Research/HSI_Deep_Learning_Modeling/test_AE.py",
+            "console": "integratedTerminal",
+            "args": ["model2020-11-23-09-04-08.pth"]
+        },
+        {
             "name": "Python: Current File",
             "type": "python",
             "request": "launch",
