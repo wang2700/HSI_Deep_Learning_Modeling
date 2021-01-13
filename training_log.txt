@@ -14,6 +14,8 @@
     Model Filename: model2020-11-23-09-04-08.pth
     Max Length: 211
     Max Width: 241
+    stride: 1 @ stage 1 & 2
+    stride: 2 @ stage 3
 
 11-24-2020 13:05:22:
     Epoch: 4968/5000
@@ -21,3 +23,14 @@
     Model Filename: model2020-11-24-13-05-22.pth
     Max Length: 211
     Max Width: 241
+    stride: 1 @ stage 1 & 2
+    stride: 2 @ stage 3
+
+11-24-2020 13:05:22:
+    Epoch: 1961/2000
+    Loss: 866700
+    Model Filename: modelAE2020-11-27-15-09-50.pth
+    Max Length: 201
+    Max Width: 241
+    stride: 1 @ stage 1 & 2
+    stride: 2 @ stage 3

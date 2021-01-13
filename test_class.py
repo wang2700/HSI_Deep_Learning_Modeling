@@ -7,19 +7,28 @@ import yaml
 import pprint
 from Dataset.HSIDataset import HSIDataset
 from model.HSI_AE import HSI_AE
+from model.Treatment_Classifier import Treatment_Classifier
 import matplotlib.pyplot as plt
 import utils.HSI_Analysis as HSI_Analysis
 import numpy as np
 import cv2
 import sys
 
-def test(cfg, model_name):
+def test(cfg, AE_model_name, class_model_name):
     batch_size = cfg['TEST']['BATCH_SIZE']
 
+    print('Load AE Model')
     AE = HSI_AE(n_latent=cfg['MODEL']['AE']['N_LATENT'], n_wavelength=cfg['DATASET']['N_WAVELENGTH'])
-    AE.load_state_dict(torch.load(cfg['MODEL']['AE']['MODEL_PATH'] + '/' + model_name))
+    AE.load_state_dict(torch.load(cfg['MODEL']['AE']['MODEL_PATH'] + '/' + AE_model_name))
     AE = AE.cuda()
     AE.eval()
+
+    print('Load Classification model')
+    class_model = Treatment_Classifier(n_classes=cfg['MODEL']['TREATMENT_CLASS']['N_CLASSES'], 
+                                        input_ch=cfg['MODEL']['AE']['N_LATENT'])
+    class_model.load_state_dict(torch.load(cfg['MODEL']['AE']['MODEL_PATH'] + '/' + class_model_name))
+    class_model = class_model.cuda()
+    class_model.eval()
 
     dataset = HSIDataset(cfg=cfg,
                         root_dir=cfg['DATASET']['DATA_DIR'],
@@ -32,16 +41,17 @@ def test(cfg, model_name):
                                                 batch_size=batch_size,
                                                 shuffle=False)
 
-    loss_fn = nn.MSELoss(reduction='sum')
+    loss_fn = nn.BCELoss(reduction='sum')
     test_loss = 0
     with torch.no_grad():
         for i, data in enumerate(test_loader):
             image = data[0]
             image = image.cuda()
-            _, output = AE(image)
-            test_loss += loss_fn(output, image).item()
-            for i in range(output.shape[0]):
-                evaluate(cfg, output[i], image[i], data[1][i])
+            gt = data[2].view(-1, 1).cuda()
+            features, output = AE(image)
+            pred = class_model(features)
+            test_loss += loss_fn(pred, gt).item()
+            print(pred, gt)
         
         test_loss /= len(test_loader.dataset)
         print(f'Test result on the model: Avg Loss is {test_loss}')
@@ -99,4 +109,4 @@ if __name__ == "__main__":
     cfg = yaml.load(open('config/config.yaml'), Loader=yaml.FullLoader)
     pprint.pprint(cfg, indent=4)
     args = sys.argv
-    test(cfg, args[1])
+    test(cfg, args[1], args[2])

@@ -3,32 +3,25 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 class Treatment_Classifier(nn.Module):
-    def __init__(self, n_classes, n_input, n_stage):
+    def __init__(self, n_classes, input_ch):
         super(Treatment_Classifier, self).__init__()
 
-        self.n_stage = n_stage
-        feature_steps = [n_input]
-        for i in range(n_stage-1):
-            feature_steps.append(int(feature_steps[-1] - (n_input-n_classes)/n_stage))
-        feature_steps.append(n_classes)
-        print(feature_steps)
-        #linear layer for classification
-        self.linear_list = []
-        for i in range(n_stage):
-          self.linear_list.append(nn.Linear(feature_steps[i], feature_steps[i+1]))
+        self.conv1 = nn.Conv2d(input_ch, 50, kernel_size=3, stride=2)
+        self.conv2 = nn.Conv2d(50, 10, kernel_size=3, stride=2)
+        self.fc = nn.Linear(10*30*26, n_classes)
 
     def forward(self, x):
-        for i in range(self.n_stage-1):
-          x = F.relu(self.linear_list[i](x))
-        x = torch.sigmoid(self.linear_list[-1](x))
+        x = F.relu(self.conv1(x))
+        x = F.relu(self.conv2(x))
+        x = self.fc(x.view(-1, 10*30*26))
+        x = torch.sigmoid(x)
         return x
 
 if __name__ == "__main__":
-    n_classes = 2
-    n_input = 100
-    n_stage = 6
-    b = 5
-    features = torch.randn(b, n_input)
-    net = Treatment_Classifier(n_classes, n_input, n_stage)
+    b, c, h, w = 10, 150, 124, 109
+    n_classes = 1
+    input_ch = 150
+    features = torch.randn(b, c, h, w)
+    net = Treatment_Classifier(n_classes, input_ch)
     classfication = net(features)
     print(classfication)

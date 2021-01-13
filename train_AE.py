@@ -17,7 +17,7 @@ def train(cfg, pre_train_model):
     time = time.strftime("%Y-%m-%d-%H-%M-%S")
     model_path = cfg['MODEL']['AE']['MODEL_PATH'] + '/' + 'modelAE' + time + '.pth'
 
-    batch_size = cfg['TRAIN']['BATCH_SIZE']
+    batch_size = cfg['TRAIN']['AE']['BATCH_SIZE']
 
     best_loss = -1
     best_loss_epoch = -1
@@ -40,13 +40,15 @@ def train(cfg, pre_train_model):
         print(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") + 'Load From exisiting model: ' + pre_train_model)
         AE.load_state_dict(torch.load(cfg['MODEL']['AE']['MODEL_PATH'] + '/' + pre_train_model))
     
-    dataset = HSIDataset(root_dir=cfg['DATASET']['DATA_DIR'],
+    dataset = HSIDataset(cfg=cfg,
+                        root_dir=cfg['DATASET']['DATA_DIR'],
                         max_length=cfg['DATASET']['MAX_LENGTH'],
                         max_width=cfg['DATASET']['MAX_WIDTH'],
                         transform=transform_list,
                         train=True)
 
-    test_dataset = HSIDataset(root_dir=cfg['DATASET']['DATA_DIR'],
+    test_dataset = HSIDataset(cfg=cfg,
+                        root_dir=cfg['DATASET']['DATA_DIR'],
                         max_length=cfg['DATASET']['MAX_LENGTH'],
                         max_width=cfg['DATASET']['MAX_WIDTH'],
                         transform=None,

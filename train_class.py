@@ -10,6 +10,8 @@ from model.HSI_AE import HSI_AE
 from model.Treatment_Classifier import Treatment_Classifier
 import datetime
 import sys
+import numpy as np
+from test_AE import evaluate
 
 def train(cfg, AE_model_name):
     
@@ -37,9 +39,9 @@ def train(cfg, AE_model_name):
     transform_list = transforms.Compose(transform_list)
 
     AE = HSI_AE(n_latent=cfg['MODEL']['AE']['N_LATENT'], n_wavelength=cfg['DATASET']['N_WAVELENGTH']).cuda()
+    n_input = np.prod(cfg['MODEL']['AE']['OUTPUT_SIZE'])
     class_model = Treatment_Classifier(n_classes=cfg['MODEL']['TREATMENT_CLASS']['N_CLASSES'], 
-                                        n_input=sum(cfg['MODEL']['AE']['OUTPUT_SIZE']), 
-                                        n_stage=cfg['MODEL']['TREATEMENT_CLASS']['N_STAGE']).cuda()
+                                        input_ch=cfg['MODEL']['AE']['N_LATENT']).cuda()
     
     if AE_model_name != None:
         print(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") + 'Load From exisiting model: ' + AE_model_name)
@@ -75,9 +77,11 @@ def train(cfg, AE_model_name):
         class_model.train()
         for batch_idx, data in enumerate(train_loader):
             hsi_img = data[0].cuda()
-            gt = data[2].cuda()
+            gt = data[2].view(-1, 1).cuda()
             optimizer.zero_grad()
             features, output = AE(hsi_img)
+            # for i in range(output.shape[0]):
+            #     evaluate(cfg, output[i], hsi_img[i], data[1][i])
             pred = class_model(features)
             loss = class_loss_fn(pred, gt)
             loss.backward()
@@ -85,14 +89,14 @@ def train(cfg, AE_model_name):
 
             train_losses.append(loss.item()/batch_size)
             print(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") + f' Epoch {epoch}: [{batch_idx*len(hsi_img)}/{len(train_loader.dataset)}] Loss: {loss.item()/batch_size}')
-        val_loss = validation(epoch, cfg, AE, test_dataset)
+        val_loss = validation(epoch, cfg, AE, class_model,test_dataset)
         if best_loss == -1 or best_loss > val_loss:
             print(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") + f' Epoch {epoch}: Better loss -- Save Model')
             best_loss = val_loss
             best_loss_epoch = epoch
             torch.save(class_model.state_dict(), class_model_path)
     print(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") + f' Best Loss: {best_loss} @ Epoch {best_loss_epoch}')
-    print(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") + ' Best Model Saved at: ' + model_path)
+    print(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") + ' Best Model Saved at: ' + class_model_path)
 
 def validation(epoch, cfg, AE, class_model, dataset):
     batch_size = cfg['TEST']['BATCH_SIZE']
@@ -101,12 +105,12 @@ def validation(epoch, cfg, AE, class_model, dataset):
     test_loader = torch.utils.data.DataLoader(dataset, 
                                                 batch_size=batch_size,
                                                 shuffle=False)
-    loss_fn = nn.BCELOSS(reduction='sum')
+    loss_fn = nn.BCELoss(reduction='sum')
     test_loss = 0
     with torch.no_grad():
         for i, data in enumerate(test_loader):
             image = data[0].cuda()
-            gt = data[2].cuda()
+            gt = data[2].view(-1, 1).cuda()
             features, _ = AE(image)
             pred = class_model(features)
             test_loss += loss_fn(pred, gt).item()

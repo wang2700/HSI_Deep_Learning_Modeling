@@ -36,6 +36,7 @@ class HSIDataset(Dataset):
             idx = idx.tolist()
         plot_name = self.rawNameList[idx][14:18]
         P_gt = self.cfg['DATASET']['CLASSES'][plot_name]
+        P_gt = torch.tensor(P_gt, dtype=torch.float32)
 
         image = np.load(self.root_dir + r'/' + self.rawNameList[idx] + '.npy')
         whiteRef = np.load(self.root_dir + r'/' + self.rawNameList[idx] + '_whRef.npy')
