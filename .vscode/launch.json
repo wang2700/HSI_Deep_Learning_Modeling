@@ -5,6 +5,13 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "Python: Train AE",
+            "type": "python",
+            "request": "launch",
+            "program": "/home/jerry/Documents/Research/HSI_Deep_Learning_Modeling/train_AE.py",
+            "console": "integratedTerminal"
+        },
+        {
             "name": "Python: Test AE",
             "type": "python",
             "request": "launch",

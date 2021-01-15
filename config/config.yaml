@@ -1,7 +1,7 @@
 TRAIN: 
   AE:
-    BATCH_SIZE: 4
-    EPOCH: 5000
+    BATCH_SIZE: 2
+    EPOCH: 300
   TREATMENT_CLASS:
     BATCH_SIZE: 2
     EPOCH: 30
@@ -10,13 +10,16 @@ TEST:
   BATCH_SIZE: 6
 
 OPTIMIZER:
-  lr: 0.001
+  lr: 0.0005
 
 MODEL:
   AE:
     N_LATENT: 150
-    MODEL_PATH: '/media/jerrynas/Research/LeafSpec/HSI Deep Learning Model'
+    MODEL_PATH: '/media/jerrynas/Research/LeafSpec/Models/HSI Deep Learning Model/Jan2020'
     OUTPUT_SIZE: [150, 124, 109]
+    LAYER_CHANNEL: [360,350,340,330,320,310,300,290,280,270,260,250,240,230,220,210,200,190,180,170,160,150,140,130,120,110,100,90,80,70,60,50,40,30,20,10,1]
+    MAXPOOL_AFTER: 3
+    STRIDE_BEFORE: 1
   TREATMENT_CLASS:
     N_CLASSES: 1
     N_STAGES: 3
@@ -24,7 +27,7 @@ MODEL:
 DATASET:
   N_WAVELENGTH: 360
   DATA_DIR: '/media/jerrynas/Research/LeafSpec/SoyBean Device Data/Sumitomo 2020/Raw Data'
-  MAX_LENGTH: 211
+  MAX_LENGTH: 201
   MAX_WIDTH: 241
   ROTATE_IMAGE: True
   FLIP_HORIZONTAL: True

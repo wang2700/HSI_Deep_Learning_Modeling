@@ -34,7 +34,12 @@ def train(cfg, pre_train_model):
 
     transform_list = transforms.Compose(transform_list)
         
-    AE = HSI_AE(n_latent=cfg['MODEL']['AE']['N_LATENT'], n_wavelength=cfg['DATASET']['N_WAVELENGTH']).cuda()
+    AE = HSI_AE(cfg['MODEL']['AE']['LAYER_CHANNEL'], 
+                len(cfg['MODEL']['AE']['LAYER_CHANNEL']),
+                cfg['MODEL']['AE']['MAXPOOL_AFTER'],
+                cfg['MODEL']['AE']['STRIDE_BEFORE']).cuda()
+
+    print(AE)
 
     if pre_train_model != None:
         print(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") + 'Load From exisiting model: ' + pre_train_model)
@@ -59,7 +64,7 @@ def train(cfg, pre_train_model):
                                                 shuffle=True)
 
     optimizer = optim.Adam(AE.parameters(), lr=cfg['OPTIMIZER']['lr'])
-    loss_fn = nn.MSELoss(reduction='sum')
+    loss_fn = nn.MSELoss(reduction='mean')
 
     train_losses = []
     train_counter = []
@@ -71,6 +76,8 @@ def train(cfg, pre_train_model):
             optimizer.zero_grad()
             hsi_img = hsi_img.cuda()
             _, output = AE(hsi_img)
+            output_size = output.shape
+            # hsi_img = hsi_img[:,:,:output.shape[2],:output.shape[3]]
             loss = loss_fn(output, hsi_img)
             loss.backward()
             optimizer.step()
@@ -98,7 +105,7 @@ def validation(epoch, cfg, model, dataset):
                                                 batch_size=batch_size,
                                                 shuffle=False)
 
-    loss_fn = nn.MSELoss(reduction='sum')
+    loss_fn = nn.MSELoss(reduction='mean')
     test_loss = 0
     with torch.no_grad():
         for i, data in enumerate(test_loader):
@@ -106,7 +113,7 @@ def validation(epoch, cfg, model, dataset):
             image = image.cuda()
             _, output = model(image)
             test_loss += loss_fn(output, image).item()
-        
+            # image = F.pad(image, [0, output.shape[2], 0, output.shape[3]])
         test_loss /= len(test_loader.dataset)
         print(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") + f' Epoch {epoch}: Test result on the model: Avg Loss is {test_loss}')
     return test_loss

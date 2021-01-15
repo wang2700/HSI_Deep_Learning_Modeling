@@ -8,6 +8,7 @@ import pprint
 from Dataset.HSIDataset import HSIDataset
 from model.HSI_AE import HSI_AE
 import matplotlib.pyplot as plt
+import matplotlib
 import utils.HSI_Analysis as HSI_Analysis
 import numpy as np
 import cv2
@@ -16,7 +17,9 @@ import sys
 def test(cfg, model_name):
     batch_size = cfg['TEST']['BATCH_SIZE']
 
-    AE = HSI_AE(n_latent=cfg['MODEL']['AE']['N_LATENT'], n_wavelength=cfg['DATASET']['N_WAVELENGTH'])
+    AE = HSI_AE(cfg['MODEL']['AE']['LAYER_CHANNEL'], 
+                    len(cfg['MODEL']['AE']['LAYER_CHANNEL']),
+                    cfg['MODEL']['AE']['MAXPOOL_AFTER'])
     AE.load_state_dict(torch.load(cfg['MODEL']['AE']['MODEL_PATH'] + '/' + model_name))
     AE = AE.cuda()
     AE.eval()
@@ -32,8 +35,9 @@ def test(cfg, model_name):
                                                 batch_size=batch_size,
                                                 shuffle=False)
 
-    loss_fn = nn.MSELoss(reduction='sum')
+    loss_fn = nn.MSELoss(reduction='mean')
     test_loss = 0
+    print("Start Testing AE")
     with torch.no_grad():
         for i, data in enumerate(test_loader):
             image = data[0]
@@ -98,5 +102,15 @@ def analysis(cfg, image):
 if __name__ == "__main__":
     cfg = yaml.load(open('config/config.yaml'), Loader=yaml.FullLoader)
     pprint.pprint(cfg, indent=4)
+    gui_env = ['TKAgg','GTKAgg','Qt4Agg','WXAgg']
+    for gui in gui_env:
+        try:
+            print("testing", gui)
+            matplotlib.use(gui,warn=False, force=True)
+            from matplotlib import pyplot as plt
+            break
+        except:
+            continue
+    print("Using:",matplotlib.get_backend())
     args = sys.argv
     test(cfg, args[1])
