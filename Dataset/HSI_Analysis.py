@@ -31,6 +31,13 @@ def segmentation(img, ndvi, thresh):
     mask[mask>thresh] = 1
     return img * (np.dstack([mask]*ImgWidth))
 
+def getMask(img, ndvi, thresh):
+    ImgWidth = img.shape[2]
+    mask = ndvi
+    mask[mask<=thresh] = False
+    mask[mask>thresh] = True
+    return np.array(mask, dtype=bool)
+
 def removeRightRegion(hyperImg):
     _, w, _ = hyperImg.shape
     n = 0

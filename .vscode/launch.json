@@ -4,38 +4,7 @@
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
-        {
-            "name": "Python: Train AE",
-            "type": "python",
-            "request": "launch",
-            "program": "/home/jerry/Documents/Research/HSI_Deep_Learning_Modeling/train_AE.py",
-            "console": "integratedTerminal"
-        },
-        {
-            "name": "Python: Test AE",
-            "type": "python",
-            "request": "launch",
-            "program": "/home/jerry/Documents/Research/HSI_Deep_Learning_Modeling/test_AE.py",
-            "console": "integratedTerminal",
-            "args": ["model2020-11-23-09-04-08.pth"]
-        },
-        {
-            "name": "Python: Train Class",
-            "type": "python",
-            "request": "launch",
-            "program": "/home/jerry/Documents/Research/HSI_Deep_Learning_Modeling/train_class.py",
-            "console": "integratedTerminal",
-            "args": ["model2020-11-23-09-04-08.pth"]
-        },
-        {
-            "name": "Python: Test Class",
-            "type": "python",
-            "request": "launch",
-            "program": "/home/jerry/Documents/Research/HSI_Deep_Learning_Modeling/test_class.py",
-            "console": "integratedTerminal",
-            "args": ["model2020-11-23-09-04-08.pth",
-                    "modelClass2020-11-30-09-49-50.pth"]
-        },
+        
         {
             "name": "Python: Current File",
             "type": "python",

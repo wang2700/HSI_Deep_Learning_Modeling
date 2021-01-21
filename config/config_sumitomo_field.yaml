@@ -1,6 +1,6 @@
 TRAIN:
   SPEC_AE:
-    BATCH_SIZE: 32
+    BATCH_SIZE: 1
     EPOCH: 100
   AE:
     BATCH_SIZE: 2
@@ -33,15 +33,23 @@ MODEL:
     N_STAGES: 3
 
 DATASET:
-  N_WAVELENGTH: 368
+  N_WAVELENGTH: 360
   DATA_DIR: '/media/jerrynas/Research/LeafSpec/SoyBean Device Data/Sumitomo 2020/Raw Data'
   MAX_LENGTH: 200
-  MAX_WIDTH: 244
+  MAX_WIDTH: 240
   ROTATE_IMAGE: True
   FLIP_HORIZONTAL: True
   FLIP_VERTICAL: True
+  CLASSES: {
+    '6825': 1.0,
+    '6826': 0.0,
+    '6827': 0.0,
+    '6828': 1.0,
+    '6829': 1.0,
+    '6830': 0.0
+  }
 
 HSI:
   NDVI_THRESH: 0.45
-  PST2WV: [1.3186, 444.7888]
-  WV2PST: [0.7584, -337.3115]
+  PST2WV: [1.3178, 442.2233]
+  WV2PST: [0.7588, -335.5678]
