@@ -1,11 +1,13 @@
+import time
 import sys
+sys.path.insert(0, '/home/jerry/Documents/Research/HSI_Deep_Learning_Modeling/')
 import torch
 import torch.nn.functional as F
 from torch.utils.data import Dataset
 from torchvision import transforms, utils
 import numpy as np
-from .files import Files
-from .HSI_Analysis import caliColor, getMask, getNDVIHeatmap
+from src.utils.files import Files
+from src.utils.HSI_Analysis import caliColor, getMask, getNDVIHeatmap
 import csv
 import yaml
 
@@ -45,16 +47,31 @@ class SpecDataset(Dataset):
         #get mask
         ndvi = getNDVIHeatmap(image, self.cfg['HSI']['WV2PST'])
         mask = getMask(image, ndvi, self.cfg['HSI']['NDVI_THRESH'])
+        #find index of the spectrum that got extracted.
+        location = np.where(mask)
         #extract spectrum that is part of the leaf
         specs = image[mask]
         specs = torch.tensor(specs, dtype=torch.float32)
+        
+        # t0 = time.time()
+        # reconstruct = torch.tensor(np.zeros_like(image), dtype=torch.float32)
+        # k = 0
+        # for k in range(len(location[0])):
+        #     i = location[0][k]
+        #     j = location[1][k]
+        #     reconstruct[i][j] = specs[k]
+        #     k += 1
+        # t1 = time.time()
+        # print(t1-t0)
+        
+
         # specs = specs.permute((1,0))
         # image = torch.tensor(image, dtype=torch.float32)
         # image = image.permute((2, 0, 1))
         # image = F.pad(image, (0, self.max_length-image.shape[2],0,self.max_width-image.shape[1]))
         # if self.transform:
         #     image = self.transform(image)
-        return (specs, pst)
+        return (specs, pst, location)
 
 if __name__ == "__main__":
     cfg = yaml.load(open('config/config.yaml'), Loader=yaml.FullLoader)

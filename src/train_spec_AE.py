@@ -17,7 +17,7 @@ def train(cfg, pre_train_model):
 
     time = datetime.datetime.now()
     time = time.strftime("%Y-%m-%d-%H-%M-%S")
-    model_path = cfg['MODEL']['SPEC_AE']['MODEL_PATH'] + '/' + 'modelAE' + time + '.pth'
+    model_path = cfg['MODEL']['SPEC_AE']['MODEL_PATH'] + '/' + time + '_modelSpecAE' + '.pth'
 
     batch_size = cfg['TRAIN']['SPEC_AE']['BATCH_SIZE']
 
@@ -57,7 +57,7 @@ def train(cfg, pre_train_model):
     optimizer = optim.Adam(AE.parameters(), lr=cfg['OPTIMIZER']['lr'])
     loss_fn = nn.MSELoss(reduction='mean')
 
-    for epoch in range(cfg['TRAIN']['AE']['EPOCH']):
+    for epoch in range(cfg['TRAIN']['SPEC_AE']['EPOCH']):
         AE.train()
         for batch_idx, data in enumerate(train_loader):
             # hsi_img = data[0]
@@ -83,7 +83,10 @@ def train(cfg, pre_train_model):
             torch.save(AE.state_dict(), model_path)
     print(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") + f' Best Loss: {best_loss} @ Epoch {best_loss_epoch}')
     print(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") + ' Best Model Saved at: ' + model_path)
-    
+
+    # save yaml specified to this model
+    with open(cfg['MODEL']['SPEC_AE']['MODEL_PATH'] + '/' + time + '_config' + '.yaml', 'w') as f:
+        yaml.dump(cfg, f) 
 
     
 
@@ -116,7 +119,7 @@ def validation(epoch, cfg, model, dataset):
 #     return x
 
 if __name__ == "__main__":
-    cfg = yaml.load(open('config/config.yaml'), Loader=yaml.FullLoader)
-    pprint.pprint(cfg, indent=4)
     args = sys.argv
-    train(cfg, args[1] if len(args)>1 else None)
+    cfg = yaml.load(open('config/' + args[1]), Loader=yaml.FullLoader)
+    pprint.pprint(cfg, indent=4)
+    train(cfg, None)

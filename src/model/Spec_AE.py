@@ -28,7 +28,7 @@ class Spec_AE(nn.Module):
         self.batchnorm = nn.BatchNorm1d(n_wavelength)
         
     def forward(self, x):
-        # x = self.batchnorm(x)
+        x = self.batchnorm(x)
         for i, layer in enumerate(self.encoderList):
             x = F.relu(layer(x))
 
