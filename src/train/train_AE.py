@@ -11,7 +11,7 @@ import datetime
 import sys
 
 
-def train(cfg, pre_train_model):
+def train_AE(cfg, pre_train_model):
 
     time = datetime.datetime.now()
     time = time.strftime("%Y-%m-%d-%H-%M-%S")
@@ -124,4 +124,4 @@ if __name__ == "__main__":
     cfg = yaml.load(open('config/config.yaml'), Loader=yaml.FullLoader)
     pprint.pprint(cfg, indent=4)
     args = sys.argv
-    train(cfg, args[1] if len(args)>1 else None)
+    train_AE(cfg, args[1] if len(args)>1 else None)

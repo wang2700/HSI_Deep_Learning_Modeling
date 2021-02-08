@@ -12,11 +12,11 @@ import datetime
 import sys
 
 
-def train(cfg):
+def train_spec_AE(cfg):
 
     time = datetime.datetime.now()
     time = time.strftime("%Y-%m-%d-%H-%M-%S")
-    model_path = cfg['MODEL']['SPEC_AE']['MODEL_PATH'] + '/' + time + '_modelSpecAE' + '.pth'
+    model_path = cfg['MODEL']['SPEC_AE']['MODEL_PATH'] + '/' + time + '/Spec_AE' + '.pth'
 
     batch_size = cfg['TRAIN']['SPEC_AE']['BATCH_SIZE']
 
@@ -84,10 +84,10 @@ def train(cfg):
     print(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") + ' Best Model Saved at: ' + model_path)
 
     # save yaml specified to this model
-    with open(cfg['MODEL']['SPEC_AE']['MODEL_PATH'] + '/' + time + '_config' + '.yaml', 'w') as f:
+    with open(cfg['MODEL']['SPEC_AE']['MODEL_PATH'] + '/' + time + '/config.yaml' , 'w') as f:
         yaml.dump(cfg, f)
     
-    return time + '_config' + '.yaml'
+    return time
 
     
 
