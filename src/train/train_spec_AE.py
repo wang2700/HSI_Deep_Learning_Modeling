@@ -1,19 +1,18 @@
 import sys
-sys.path.append('/home/Documents/Research/HSI_Deep_Learning_Modeling')
+sys.path.insert(0, '/home/jerry/Documents/Research/HSI_Deep_Learning_Modeling/')
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
 import torch.optim as optim
-from torchvision import transforms
 import yaml
 import pprint
-import Dataset.SpecDataset as Dataset
-from model.Spec_AE import Spec_AE
+import src.Dataset.SpecDataset as Dataset
+from src.model.Spec_AE import Spec_AE
 import datetime
 import sys
 
 
-def train(cfg, pre_train_model):
+def train(cfg):
 
     time = datetime.datetime.now()
     time = time.strftime("%Y-%m-%d-%H-%M-%S")
@@ -86,7 +85,9 @@ def train(cfg, pre_train_model):
 
     # save yaml specified to this model
     with open(cfg['MODEL']['SPEC_AE']['MODEL_PATH'] + '/' + time + '_config' + '.yaml', 'w') as f:
-        yaml.dump(cfg, f) 
+        yaml.dump(cfg, f)
+    
+    return time + '_config' + '.yaml'
 
     
 
@@ -120,6 +121,6 @@ def validation(epoch, cfg, model, dataset):
 
 if __name__ == "__main__":
     args = sys.argv
-    cfg = yaml.load(open('config/' + args[1]), Loader=yaml.FullLoader)
-    pprint.pprint(cfg, indent=4)
-    train(cfg, None)
+    cfg = yaml.load(open('/home/jerry/Documents/Research/HSI_Deep_Learning_Modeling/config/' + args[1]), Loader=yaml.FullLoader)
+    pprint.pprint(cfg, indent=2)
+    print(train(cfg))

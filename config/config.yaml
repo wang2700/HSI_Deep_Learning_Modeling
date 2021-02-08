@@ -1,7 +1,7 @@
 TRAIN:
   SPEC_AE:
     BATCH_SIZE: 32
-    EPOCH: 20
+    EPOCH: 1
   AE:
     BATCH_SIZE: 2
     EPOCH: 300
