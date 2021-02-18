@@ -123,4 +123,4 @@ if __name__ == "__main__":
     args = sys.argv
     cfg = yaml.load(open('/home/jerry/Documents/Research/HSI_Deep_Learning_Modeling/config/' + args[1]), Loader=yaml.FullLoader)
     pprint.pprint(cfg, indent=2)
-    print(train(cfg))
+    print(train_spec_AE(cfg))

@@ -3,8 +3,8 @@ import torch.nn.functional as F
 from torch.utils.data import Dataset
 from torchvision import transforms, utils
 import numpy as np
-from .files import Files
-from .HSI_Analysis import caliColor
+from .utils.files import Files
+from .utils.HSI_Analysis import caliColor
 import csv
 
 class HSIDataset(Dataset):

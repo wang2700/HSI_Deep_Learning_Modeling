@@ -4,22 +4,32 @@
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
-        
         {
             "name": "Python: Current File",
             "type": "python",
             "request": "launch",
             "program": "${file}",
+            "console": "integratedTerminal",
+            "args": [
+                "config.yaml"
+            ]
+        },
+        {
+            "name": "Python: Current File (No Args)",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
             "console": "integratedTerminal"
         },
-
         {
             "name": "Python: Test Spec AE",
             "type": "python",
             "request": "launch",
             "program": "/home/jerry/Documents/Research/HSI_Deep_Learning_Modeling/test_spec_AE.py",
             "console": "integratedTerminal",
-            "args": ["modelAE2021-01-27-14-24-59.pth"]
+            "args": [
+                "modelAE2021-01-27-14-24-59.pth"
+            ]
         }
     ]
 }

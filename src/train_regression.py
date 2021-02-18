@@ -1,12 +1,14 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+import torch.optim as optim
 import yaml
 import pprint
-from Dataset.HSIDataset import HSIDataset
+import numpy as np
+from Dataset.SpecDataset import SpecDataset
 from model.HSI_Regre import HSI_Regre
 from model.Spec_AE import Spec_AE
-import datastime
+import datetime
 import sys
 
 def train_regre(cfg, folder_name):
@@ -27,13 +29,28 @@ def train_regre(cfg, folder_name):
 
     print(Regre)
 
-    dataset = DAtaset.SpecDataset(cfg=cfg, train=True)
+    dataset = SpecDataset(cfg=cfg, train=True)
 
-    test_dataset = Dataset.SpecDataset(cfg=cfg, train=False)
+    test_dataset = SpecDataset(cfg=cfg, train=False)
 
     train_loader = torch.utils.data.DataLoader(dataset, batch_size=batch_size, shuffle=True)
 
     optimizer = optim.Adam(Regre.parameters(), lr=cfg['OPTIMIZER']['lr'])
-    loss_fn = nn.M
+    loss_fn = nn.MSELoss(reduction='mean')
 
+    train_losses = []
 
+    for epoch in range(cfg['TRAIN']['REGRESSION']['EPOCH']):
+        Regre.train()
+        for batch_index, data in enumerate(train_loader):
+            for i in range(batch_index):
+                spec = (data[0])[i,:,:]
+                spec = spec.cuda()
+                _, ouput = AE(spec)
+                
+def reconstruct(spec_feature, location, shape):
+    reconstruct = torch.tensor(np.zeros(shape), dtype=torch.float32)
+    k = 0
+    for k in range(len(location[0])):
+        reconstruct[location[0][k]][location[1][k]] = spec_feature[k]
+    return reconstruct

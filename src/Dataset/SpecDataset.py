@@ -6,8 +6,8 @@ import torch.nn.functional as F
 from torch.utils.data import Dataset
 from torchvision import transforms, utils
 import numpy as np
-from src.utils.files import Files
-from src.utils.HSI_Analysis import caliColor, getMask, getNDVIHeatmap
+from .utils.files import Files
+from .utils.HSI_Analysis import caliColor, getMask, getNDVIHeatmap
 import csv
 import yaml
 
@@ -71,7 +71,7 @@ class SpecDataset(Dataset):
         # image = F.pad(image, (0, self.max_length-image.shape[2],0,self.max_width-image.shape[1]))
         # if self.transform:
         #     image = self.transform(image)
-        return (specs, pst, location)
+        return (specs, pst, location, image.shape)
 
 if __name__ == "__main__":
     cfg = yaml.load(open('config/config.yaml'), Loader=yaml.FullLoader)

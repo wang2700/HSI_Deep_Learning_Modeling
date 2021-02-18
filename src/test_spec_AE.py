@@ -5,11 +5,11 @@ import torch.optim as optim
 from torchvision import transforms
 import yaml
 import pprint
-from Dataset.SpecDataset import SpecDataset
-from model.Spec_AE import Spec_AE
+from src.Dataset.SpecDataset import SpecDataset
+from src.model.Spec_AE import Spec_AE
 import matplotlib.pyplot as plt
 import matplotlib
-import Dataset.HSI_Analysis as HSI_Analysis
+import Dataset.utils.HSI_Analysis as HSI_Analysis
 import numpy as np
 import cv2
 import sys
