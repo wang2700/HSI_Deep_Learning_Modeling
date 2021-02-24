@@ -1,13 +1,16 @@
 TRAIN:
   SPEC_AE:
     BATCH_SIZE: 32
-    EPOCH: 100
-  AE:
-    BATCH_SIZE: 2
-    EPOCH: 300
-  TREATMENT_CLASS:
-    BATCH_SIZE: 2
+    EPOCH: 1
+  REGRESSION:
+    BATCH_SIZE: 4
     EPOCH: 30
+  # AE:
+  #   BATCH_SIZE: 2
+  #   EPOCH: 300
+  # TREATMENT_CLASS:
+  #   BATCH_SIZE: 2
+  #   EPOCH: 30
 
 TEST:
   BATCH_SIZE: 1
@@ -16,14 +19,17 @@ OPTIMIZER:
   lr: 0.001
 
 MODEL:
+  MODEL_PATH: '/media/jerrynas/Research/LeafSpec/Models/HSI Deep Learning Model/Dec2020'
   SPEC_AE:
     N_WAVELENGTH: 360
-    N_LATENT: 5
+    N_LATENT: 3
     N_STAGES: 4
-    MODEL_PATH: '/media/jerrynas/Research/LeafSpec/Models/HSI Deep Learning Model/Jan2020'
-  TREATMENT_CLASS:
-    N_CLASSES: 1
-    N_STAGES: 3
+  REGRESSION:
+    N_PRED: 1
+    GT: '/media/jerrynas/Reasearch/LeafSpec/SoyBean Device Data/Sumitomo 2020/Raw Data'
+    # TREATMENT_CLASS:
+  #   N_CLASSES: 1
+  #   N_STAGES: 3
 
 DATASET:
   N_WAVELENGTH: 360

@@ -5,13 +5,23 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "Python: Train All",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspace}/src/train.py",
+            "console": "integratedTerminal",
+            "args": [
+                "config_test.yaml"
+            ]
+        },
+        {
             "name": "Python: Current File",
             "type": "python",
             "request": "launch",
             "program": "${file}",
             "console": "integratedTerminal",
             "args": [
-                "config.yaml"
+                "config_test.yaml"
             ]
         },
         {

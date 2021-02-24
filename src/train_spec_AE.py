@@ -1,3 +1,4 @@
+import os
 import sys
 sys.path.insert(0, '/home/jerry/Documents/Research/HSI_Deep_Learning_Modeling/')
 import torch
@@ -6,17 +7,17 @@ import torch.nn.functional as F
 import torch.optim as optim
 import yaml
 import pprint
-import src.Dataset.SpecDataset as Dataset
-from src.model.Spec_AE import Spec_AE
+from Dataset.SpecDataset import SpecDataset
+from model.Spec_AE import Spec_AE
 import datetime
 import sys
 
 
-def train_spec_AE(cfg):
+def train_spec_AE(cfg, model_path):
 
     time = datetime.datetime.now()
     time = time.strftime("%Y-%m-%d-%H-%M-%S")
-    model_path = cfg['MODEL']['SPEC_AE']['MODEL_PATH'] + '/' + time + '/Spec_AE' + '.pth'
+    model_path = os.path.join(model_path, 'specAE.pth')
 
     batch_size = cfg['TRAIN']['SPEC_AE']['BATCH_SIZE']
 
@@ -45,9 +46,9 @@ def train_spec_AE(cfg):
     #     print(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") + 'Load From exisiting model: ' + pre_train_model)
     #     AE.load_state_dict(torch.load(cfg['MODEL']['AE']['MODEL_PATH'] + '/' + pre_train_model))
     
-    dataset = Dataset.SpecDataset(cfg=cfg, train=True)
+    dataset = SpecDataset(cfg=cfg, train=True)
 
-    test_dataset = Dataset.SpecDataset(cfg=cfg, train=False)
+    test_dataset = SpecDataset(cfg=cfg, train=False)
     
     train_loader = torch.utils.data.DataLoader(dataset, 
                                                 batch_size=1,
@@ -82,10 +83,6 @@ def train_spec_AE(cfg):
             torch.save(AE.state_dict(), model_path)
     print(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") + f' Best Loss: {best_loss} @ Epoch {best_loss_epoch}')
     print(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") + ' Best Model Saved at: ' + model_path)
-
-    # save yaml specified to this model
-    with open(cfg['MODEL']['SPEC_AE']['MODEL_PATH'] + '/' + time + '/config.yaml' , 'w') as f:
-        yaml.dump(cfg, f)
     
     return time
 
