@@ -6,8 +6,8 @@ import torch.nn.functional as F
 from torch.utils.data import Dataset
 from torchvision import transforms, utils
 import numpy as np
-from utils.files import Files
-from utils.HSI_Analysis import caliColor, getMask, getNDVIHeatmap
+from Dataset.utils.files import Files
+from Dataset.utils.HSI_Analysis import caliColor, getMask, getNDVIHeatmap
 import pandas as pd
 import yaml
 import os
@@ -94,12 +94,17 @@ class SpecDataset(Dataset):
         # image = F.pad(image, (0, self.max_length-image.shape[2],0,self.max_width-image.shape[1]))
         # if self.transform:
         #     image = self.transform(image)
-        return (image, mask, pst, location, image.shape, gt)
+        return {'hsi_img': image, 'mask': mask, 'pst': pst, 'shape': image.shape, 'gt': gt}
 
 if __name__ == "__main__":
     cfg = yaml.load(open('config/config_test.yaml'), Loader=yaml.FullLoader)
     dataset = SpecDataset(cfg, True)
+    train_loader = torch.utils.data.DataLoader(dataset, batch_size=4, shuffle=True)
 
-    for i in range(len(dataset)):
-        sample = dataset[i]
-        print(i, sample[0].shape, dataset[i][4])
+    # for i in range(len(dataset)):
+    #     sample = dataset[i]
+    #     print(i, sample[0].shape, dataset[i][4])
+
+    for batch_index, data in enumerate(train_loader):
+        for i in range(4):
+            sample = dataset[i]

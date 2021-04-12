@@ -8,7 +8,7 @@
             "name": "Python: Train All",
             "type": "python",
             "request": "launch",
-            "program": "${workspace}/src/train.py",
+            "program": "/home/jerry/Documents/Research/HSI_Deep_Learning_Modeling/src/train.py",
             "console": "integratedTerminal",
             "args": [
                 "config_test.yaml"
