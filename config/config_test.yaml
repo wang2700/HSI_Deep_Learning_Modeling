@@ -4,7 +4,7 @@ TRAIN:
     EPOCH: 1
   REGRESSION:
     BATCH_SIZE: 4
-    EPOCH: 30
+    EPOCH: 1
   # AE:
   #   BATCH_SIZE: 2
   #   EPOCH: 300
@@ -19,26 +19,26 @@ OPTIMIZER:
   lr: 0.001
 
 MODEL:
-  MODEL_PATH: '/media/jerrynas/Research/LeafSpec/Models/HSI Deep Learning Model/Dec2020'
+  MODEL_PATH: '/media/jerrynas/Research/LeafSpec/Models/Dec_Soybean'
   SPEC_AE:
-    N_WAVELENGTH: 360
-    N_LATENT: 3
-    N_STAGES: 4
+    N_WAVELENGTH: 368
+    N_LATENT: 5
+    N_STAGES: 5
   REGRESSION:
     N_PRED: 1
-    GT: '/media/jerrynas/Reasearch/LeafSpec/SoyBean Device Data/Sumitomo 2020/Raw Data'
-    # TREATMENT_CLASS:
+  # TREATMENT_CLASS:
   #   N_CLASSES: 1
   #   N_STAGES: 3
 
 DATASET:
   N_WAVELENGTH: 360
-  DATA_DIR: '/media/jerrynas/Research/LeafSpec/SoyBean Device Data/Sumitomo 2020/Raw Data'
-  MAX_LENGTH: 200
+  DATA_DIR: '/media/jerrynas/Research/LeafSpec/Soybean Dec 2020'
+  MAX_LENGTH: 270
   MAX_WIDTH: 244
   ROTATE_IMAGE: True
   FLIP_HORIZONTAL: True
   FLIP_VERTICAL: True
+  GROUND_TRUTH: '12-16-20 Ground Truth.xlsx'
 
 HSI:
   NDVI_THRESH: 0.45

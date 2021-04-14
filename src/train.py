@@ -8,7 +8,8 @@ from train_spec_AE import train_spec_AE
 
 
 args = sys.argv
-cfg = yaml.load(open('/home/jerry/Documents/Research/HSI_Deep_Learning_Modeling/config/' + args[1]), Loader=yaml.FullLoader)
+cfg = yaml.load(open('/home/jerry/Documents/Research/HSI_Deep_Learning_Modeling/config/' +
+                     args[1]), Loader=yaml.FullLoader)
 # create directory for model and config
 time = datetime.datetime.now()
 time = time.strftime("%Y-%m-%d-%H-%M-%S")

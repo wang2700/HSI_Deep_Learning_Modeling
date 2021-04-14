@@ -103,7 +103,7 @@ def validation(epoch, cfg, model, dataset):
     test_loss = 0
     with torch.no_grad():
         for i, data in enumerate(test_loader):
-            specs = torch.flatten(data[0], start_dim=0, end_dim=1)
+            specs = torch.flatten(data['hsi_img'], start_dim=0, end_dim=2)
             specs = specs.cuda()
             _, output = model(specs)
             test_loss += loss_fn(output, specs).item()
