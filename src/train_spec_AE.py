@@ -15,6 +15,8 @@ sys.path.insert(
 
 def train_spec_AE(cfg, model_path):
 
+    TAG = 'AE'
+
     time = datetime.datetime.now()
     time = time.strftime("%Y-%m-%d-%H-%M-%S")
     model_path = os.path.join(model_path, 'specAE.pth')
@@ -73,25 +75,25 @@ def train_spec_AE(cfg, model_path):
                 optimizer.step()
                 train_loss_list.append(loss.item())
 
-            print(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") +
+            print(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") + ' - ' + TAG + ' -'
                   f' Epoch {epoch}: [{batch_idx}/{len(train_loader.dataset)}] Loss: {sum(train_loss_list)/len(train_loss_list)}')
         val_loss = validation(epoch, cfg, AE, test_dataset)
         if best_loss == -1 or best_loss > val_loss:
-            print(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") +
+            print(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") + ' - ' + TAG + ' -'
                   f' Epoch {epoch}: Better loss -- Save Model')
             best_loss = val_loss
             best_loss_epoch = epoch
             torch.save(AE.state_dict(), model_path)
-    print(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") +
+    print(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") + ' - ' + TAG + ' -'
           f' Best Loss: {best_loss} @ Epoch {best_loss_epoch}')
-    print(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") +
+    print(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") + ' - ' + TAG + ' -'
           ' Best Model Saved at: ' + model_path)
 
     return time
 
 
 def validation(epoch, cfg, model, dataset):
-    batch_size = cfg['TEST']['BATCH_SIZE']
+    batch_size = cfg['TEST']['SPEC_AE']['BATCH_SIZE']
 
     model.eval()
 

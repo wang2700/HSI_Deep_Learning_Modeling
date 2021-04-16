@@ -1,0 +1,37 @@
+TRAIN:
+  SPEC_AE:
+    BATCH_SIZE: 32
+    EPOCH: 1
+  REGRESSION:
+    BATCH_SIZE: 4
+    EPOCH: 30
+
+TEST:
+  BATCH_SIZE: 1
+
+OPTIMIZER:
+  lr: 0.001
+
+MODEL:
+  MODEL_PATH: '/content/model'
+  SPEC_AE:
+    N_WAVELENGTH: 360
+    N_LATENT: 3
+    N_STAGES: 4
+  REGRESSION:
+    N_PRED: 1
+    GT: '/content/data'
+
+DATASET:
+  N_WAVELENGTH: 360
+  DATA_DIR: '/content/data'
+  MAX_LENGTH: 200
+  MAX_WIDTH: 244
+  ROTATE_IMAGE: True
+  FLIP_HORIZONTAL: True
+  FLIP_VERTICAL: True
+
+HSI:
+  NDVI_THRESH: 0.45
+  PST2WV: [1.3186, 444.7888]
+  WV2PST: [0.7584, -337.3115]
