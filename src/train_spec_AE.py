@@ -13,7 +13,7 @@ sys.path.insert(
     0, '/home/jerry/Documents/Research/HSI_Deep_Learning_Modeling/')
 
 
-def train_spec_AE(cfg, model_path):
+def train_spec_AE(cfg, model_path, train_dataset, test_dataset):
 
     TAG = 'AE'
 
@@ -48,11 +48,7 @@ def train_spec_AE(cfg, model_path):
     #     print(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") + 'Load From exisiting model: ' + pre_train_model)
     #     AE.load_state_dict(torch.load(cfg['MODEL']['AE']['MODEL_PATH'] + '/' + pre_train_model))
 
-    dataset = SpecDataset(cfg=cfg, train=True)
-
-    test_dataset = SpecDataset(cfg=cfg, train=False)
-
-    train_loader = torch.utils.data.DataLoader(dataset,
+    train_loader = torch.utils.data.DataLoader(train_dataset,
                                                batch_size=1,
                                                shuffle=True)
 

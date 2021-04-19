@@ -41,7 +41,7 @@ def reconstruct_img(cfg, features, location):
     return reconstruct
 
 
-def train_regre(cfg, model_path):
+def train_regre(cfg, model_path, train_dataset, test_dataset):
 
     TAG = 'REGRE'
 
@@ -65,12 +65,8 @@ def train_regre(cfg, model_path):
 
     print(Regre)
 
-    dataset = SpecDataset(cfg=cfg, train=True)
-
-    test_dataset = SpecDataset(cfg=cfg, train=False)
-
     train_loader = torch.utils.data.DataLoader(
-        dataset, batch_size=batch_size, shuffle=True)
+        train_dataset, batch_size=batch_size, shuffle=True)
 
     optimizer = optim.Adam(Regre.parameters(), lr=cfg['OPTIMIZER']['lr'])
     loss_fn = nn.MSELoss(reduction='mean')
