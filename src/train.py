@@ -10,7 +10,7 @@ from Dataset.SpecDataset import SpecDataset
 
 
 args = sys.argv
-cfg = yaml.load(open('/home/jerry/Documents/Research/HSI_Deep_Learning_Modeling/config/' +
+cfg = yaml.load(open('./config/' +
                      args[1]), Loader=yaml.FullLoader)
 # create directory for model and config
 time = datetime.datetime.now()
