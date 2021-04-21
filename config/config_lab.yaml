@@ -1,0 +1,43 @@
+TRAIN:
+  SPEC_AE:
+    BATCH_SIZE: 32
+    EPOCH: 1
+  REGRESSION:
+    BATCH_SIZE: 4
+    EPOCH: 1
+
+TEST:
+  SPEC_AE:
+    BATCH_SIZE: 1
+  REGRESSION:
+    BATCH_SIZE: 4
+
+OPTIMIZER:
+  lr: 0.001
+
+MODEL:
+  MODEL_PATH: '/home/wang2700/Documents/HSI_Deep_Learning/model'
+  SPEC_AE:
+    N_WAVELENGTH: 368
+    N_LATENT: 5
+    N_STAGES: 5
+  REGRESSION:
+    N_PRED: 1
+  # TREATMENT_CLASS:
+  #   N_CLASSES: 1
+  #   N_STAGES: 3
+
+DATASET:
+  N_WAVELENGTH: 360
+  DATA_DIR: '/home/wang2700/Documents/HSI_Deep_Learning/data'
+  MAX_LENGTH: 270
+  MAX_WIDTH: 244
+  ROTATE_IMAGE: True
+  FLIP_HORIZONTAL: True
+  FLIP_VERTICAL: True
+  GROUND_TRUTH: '12-16-20 Ground Truth.xlsx'
+
+HSI:
+  NDVI_THRESH: 0.45
+  PST2WV: [1.3186, 444.7888]
+  WV2PST: [0.7584, -337.3115]
