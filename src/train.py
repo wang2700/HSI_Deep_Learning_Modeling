@@ -4,6 +4,7 @@ import pprint
 import os
 import datetime
 import pickle
+import torch
 from train_regression import train_regre
 from train_spec_AE import train_spec_AE
 from Dataset.SpecDataset import SpecDataset
@@ -29,5 +30,7 @@ with open(os.path.join(model_path, 'train_file_name.data'), 'wb') as filehandle:
     pickle.dump(train_dataset.rawNameList, filehandle)
 with open(os.path.join(model_path, 'test_file_name.data'), 'wb') as filehandle:
     pickle.dump(test_dataset.rawNameList, filehandle)
+if torch.cuda.device_count() > 1:
+    torch.cuda.set_device(1)
 train_spec_AE(cfg, model_path, train_dataset, test_dataset)
 train_regre(cfg, model_path, train_dataset, test_dataset)

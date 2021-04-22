@@ -66,8 +66,8 @@ class SpecDataset(Dataset):
 
         # get mask
         ndvi = getNDVIHeatmap(image, self.cfg['HSI']['WV2PST'])
-        plt.imshow(ndvi)
-        plt.show()
+        # plt.imshow(ndvi)
+        # plt.show()
         mask = getMask(image, ndvi, self.cfg['HSI']['NDVI_THRESH'])
         # find index of the spectrum that got extracted.
         # location = np.where(mask)

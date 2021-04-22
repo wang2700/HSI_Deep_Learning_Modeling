@@ -8,10 +8,10 @@
             "name": "Python: Train All",
             "type": "python",
             "request": "launch",
-            "program": "/home/jerry/Documents/Research/HSI_Deep_Learning_Modeling/src/train.py",
+            "program": "/home/wang2700/Documents/HSI_Deep_Learning/HSI_Deep_Learning_Modeling/src/train.py",
             "console": "integratedTerminal",
             "args": [
-                "config_test.yaml"
+                "config_lab.yaml"
             ]
         },
         {

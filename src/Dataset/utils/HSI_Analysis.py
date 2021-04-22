@@ -1,5 +1,4 @@
 import numpy as np
-import cv2
 
 def caliColor(sample, whiteRef):
         #return div0(sample, self.imgWhiteRef)

@@ -1,0 +1,11 @@
+name: HSI_DL
+dependencies:
+  - numpy
+  - matplotlib
+  - pytorch 
+  - torchvision 
+  - cudatoolkit=10.2
+  - pyyaml
+  - pandas
+  - opencv
+  - xlrd
