@@ -5,13 +5,23 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Python: Train All",
+            "name": "Python: Train All Lab",
             "type": "python",
             "request": "launch",
             "program": "/home/wang2700/Documents/HSI_Deep_Learning/HSI_Deep_Learning_Modeling/src/train.py",
             "console": "integratedTerminal",
             "args": [
                 "config_lab.yaml"
+            ]
+        },
+        {
+            "name": "Python: Train All Home",
+            "type": "python",
+            "request": "launch",
+            "program": "/home/jerry/Documents/Research/HSI_Deep_Learning_Modeling/src/train.py",
+            "console": "integratedTerminal",
+            "args": [
+                "config_test.yaml"
             ]
         },
         {

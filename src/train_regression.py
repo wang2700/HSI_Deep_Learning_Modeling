@@ -27,7 +27,7 @@ def reconstruct(spec_feature, location, shape):
 def extract_segemented_spec(data, i):
     mask = (data['mask'])[i]
     specs = (data['hsi_img'][i])[mask]
-    specs = torch.tensor(specs, dtype=torch.float32)
+    # specs = torch.tensor(specs, dtype=torch.float32)
     return specs
 
 
@@ -140,7 +140,7 @@ def validation(epoch, cfg, AE, Regre, dataset):
                                            data['gt'][:, 0].reshape((-1, 1)).cuda()))
         print(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") +
               f' Epoch {epoch}: Test result on the model: Avg Loss is {test_loss/len(dataset)}')
-    return test_loss
+    return test_loss/len(dataset)
 
 
 if __name__ == "__main__":
