@@ -90,7 +90,7 @@ def train_regre(cfg, model_path, train_dataset, test_dataset):
                 feature_map[i, :, :, :] = reconstruct(
                     output, location, feat_map_shape[1:])
             pred = Regre(feature_map)
-            loss = loss_fn(pred, data['gt'][:, 0].reshape((-1, 1)).cuda())
+            loss = loss_fn(pred, data['gt'][:, 2].reshape((-1, 1)).cuda())
             loss.backward()
             optimizer.step()
             train_losses.append(loss)
