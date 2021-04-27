@@ -21,7 +21,7 @@ def reconstruct(spec_feature, location, shape):
     k = 0
     for k in range(len(location[0])):
         reconstruct[:, location[0][k], location[1][k]] = spec_feature[k]
-    return reconstruct
+    return reconstruct.detach()
 
 
 def extract_segemented_spec(data, i):
@@ -31,14 +31,14 @@ def extract_segemented_spec(data, i):
     return specs
 
 
-def reconstruct_img(cfg, features, location):
-    reconstruct = torch.zeros(cfg['DATASET']['MAX_WIDTH'], cfg['DATASET']
-                              ['MAX_LENGTH'], cfg['MODEL']['SPEC_AE']['N_LATENT'])
-    for k in range(len(location[0])):
-        i = location[0][k]
-        j = location[1][k]
-        reconstruct[i][j] = features[k]
-    return reconstruct
+# def reconstruct_img(cfg, features, location):
+#     reconstruct = torch.zeros(cfg['DATASET']['MAX_WIDTH'], cfg['DATASET']
+#                               ['MAX_LENGTH'], cfg['MODEL']['SPEC_AE']['N_LATENT'])
+#     for k in range(len(location[0])):
+#         i = location[0][k]
+#         j = location[1][k]
+#         reconstruct[i][j] = features[k]
+#     return reconstruct
 
 
 def train_regre(cfg, model_path, train_dataset, test_dataset):
@@ -94,9 +94,16 @@ def train_regre(cfg, model_path, train_dataset, test_dataset):
             loss.backward()
             optimizer.step()
             train_losses.append(loss)
+
+            # delete variable
+            del data
+            del feature_map
+            del pred
+            del loss
             print(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") + ' - ' + TAG + ' -'
                   f' Epoch {epoch}: [{batch_index}/{floor(len(train_loader.dataset) / float(batch_size))}] Loss: {sum(train_losses)/len(train_losses)}')
         val_loss = validation(epoch, cfg, AE, Regre, test_dataset)
+
         if best_loss == -1 or best_loss > val_loss:
             print(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") + ' - ' + TAG + ' -'
                   f' Epoch {epoch}: Better loss -- Save Model')
