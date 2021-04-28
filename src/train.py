@@ -32,5 +32,10 @@ with open(os.path.join(model_path, 'test_file_name.data'), 'wb') as filehandle:
     pickle.dump(test_dataset.rawNameList, filehandle)
 if torch.cuda.device_count() > 1:
     torch.cuda.set_device(1)
-train_spec_AE(cfg, model_path, train_dataset, test_dataset)
-train_regre(cfg, model_path, train_dataset, test_dataset)
+best_AE_loss = train_spec_AE(cfg, model_path, train_dataset, test_dataset)
+best_REGRE_loss = train_regre(cfg, model_path, train_dataset, test_dataset)
+with open(os.path.join(model_path, 'loss_out.txt'), 'wb') as filehandle:
+    filehandle.write("AE Training - Best Loss: " +
+                     str(best_AE_loss[0]) + 'at Epoch: ' + str(best_AE_loss[1]) + '\n')
+    filehandle.write("Regre Training - Best Loss: " +
+                     str(best_REGRE_loss[0]) + 'at Epoch: ' + str(best_REGRE_loss[1]) + '\n')

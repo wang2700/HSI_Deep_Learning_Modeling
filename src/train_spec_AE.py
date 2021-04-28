@@ -85,7 +85,7 @@ def train_spec_AE(cfg, model_path, train_dataset, test_dataset):
     print(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") + ' - ' + TAG + ' -'
           ' Best Model Saved at: ' + model_path)
 
-    return time
+    return (best_loss, best_loss_epoch)
 
 
 def validation(epoch, cfg, model, dataset):
