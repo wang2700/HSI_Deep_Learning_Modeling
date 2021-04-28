@@ -14,6 +14,7 @@ from model.Spec_AE import Spec_AE
 import datetime
 import sys
 from math import floor
+from Loss.LogCoshLoss import LogCoshLoss
 
 
 def reconstruct(spec_feature, location, shape):
@@ -69,7 +70,8 @@ def train_regre(cfg, model_path, train_dataset, test_dataset):
         train_dataset, batch_size=batch_size, shuffle=True)
 
     optimizer = optim.Adam(Regre.parameters(), lr=cfg['OPTIMIZER']['lr'])
-    loss_fn = nn.MSELoss(reduction='mean')
+    # loss_fn = nn.MSELoss(reduction='mean')
+    loss_fn = LogCoshLoss()
 
     train_losses = []
 
