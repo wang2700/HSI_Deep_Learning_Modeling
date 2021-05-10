@@ -1,5 +1,5 @@
 {
-    "python.pythonPath": "/home/wang2700/anaconda3/envs/HSI_DL/bin/python",
+    "python.pythonPath": "/home/jerry/anaconda3/bin/python",
     "python.analysis.extraPaths": ["./src",
         "./src/Dataset",
         "./src/Dataset/utils",

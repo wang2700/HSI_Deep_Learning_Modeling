@@ -4,7 +4,7 @@ TRAIN:
     EPOCH: 1
   REGRESSION:
     BATCH_SIZE: 4
-    EPOCH: 1
+    EPOCH: 50
 
 TEST:
   SPEC_AE:
