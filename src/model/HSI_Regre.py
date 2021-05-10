@@ -14,7 +14,7 @@ class HSI_Regre(nn.Module):
     def forward(self, x):
         x = F.relu(self.conv1(x))
         x = self.model(x)
-        x = self.fc(x)
+        x = F.relu(self.fc(x))
         return x
 
 

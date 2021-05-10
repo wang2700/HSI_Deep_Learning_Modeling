@@ -129,7 +129,8 @@ def validation(epoch, cfg, AE, Regre, dataset):
     test_loader = torch.utils.data.DataLoader(dataset,
                                               batch_size=batch_size,
                                               shuffle=False)
-    loss_fn = nn.MSELoss(reduction='mean')
+    # loss_fn = nn.MSELoss(reduction='mean')
+    loss_fn = LogCoshLoss()
     test_loss = 0
     with torch.no_grad():
         for batch_index, data in enumerate(test_loader):
@@ -147,8 +148,7 @@ def validation(epoch, cfg, AE, Regre, dataset):
                 feature_map[i, :, :, :] = reconstruct(
                     output, location, feat_map_shape[1:])
             pred = Regre(feature_map)
-            test_loss += torch.sum(loss_fn(pred,
-                                           data['gt'][:, 0].reshape((-1, 1)).cuda()))
+            test_loss += torch.sum(loss_fn(pred, data['gt'][:, 2].reshape((-1, 1)).cuda()))
         print(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") +
               f' Epoch {epoch}: Test result on the model: Avg Loss is {test_loss/len(dataset)}')
     return test_loss/len(dataset)
